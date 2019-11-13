@@ -61,7 +61,7 @@ The tricks is composed by awesome Python testing features, libraries and framewo
 
 - [yappi](https://github.com/sumerc/yappi)
 
-- [zope.testbrowser](https://pypi.org/project/zope.testbrowser/)
+- [zope.testbrowser](https://github.com/zopefoundation/zope.testbrowser)
 
 # Examples
 
