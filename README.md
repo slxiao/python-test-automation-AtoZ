@@ -13,9 +13,9 @@ The tricks is composed by awesome Python testing features, libraries and framewo
 
 - [assert](https://www.programiz.com/python-programming/assert-statement)
 
-- [bahave](https://behave.readthedocs.io/en/latest/)
+- [bahave](https://github.com/behave/behave)
 
-- [coverage](https://coverage.readthedocs.io/)
+- [coverage.py](https://github.com/nedbat/coveragepy)
 
 - [doctest](https://docs.python.org/2/library/doctest.html)
 
@@ -27,7 +27,7 @@ The tricks is composed by awesome Python testing features, libraries and framewo
 
 - [html](https://docs.python.org/3/library/html.html)
 
-- [ipython](https://ipython.org/)
+- [ipython](https://github.com/ipython/ipython)
 
 - [json](https://docs.python.org/3/library/json.html)
 
