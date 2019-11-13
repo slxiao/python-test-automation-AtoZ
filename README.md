@@ -1,5 +1,6 @@
 # Introduction
 
+
 Test automation is one major application of the Python programming langurage. Inspired by [An A-Z of useful Python tricks](https://www.freecodecamp.org/news/an-a-z-of-useful-python-tricks-b467524ee747/) (which however focuses on Python basics), I created this repo to present A-Z useful tricks for Python automated tesing domain.
 
 The tricks is composed by awesome Python testing features, libraries and frameworks. Generally, they can be classified into two parts:
