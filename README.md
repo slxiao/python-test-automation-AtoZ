@@ -9,6 +9,8 @@ The tricks is composed by awesome Python testing features, libraries and framewo
 - **General-purpose testing tricks**. Since Python is general-purpose langurage, many test automation tools are written in Python and generally, they can be used in any kind of (blackbox) testing. Such tools include `Robot Framework`, `Selenium`, `pytest` and etc.
 
 
+[公众号文章](./wechat.md)
+
 # A-Z of Python test automation tricks
 
 - [assert](https://www.programiz.com/python-programming/assert-statement)
