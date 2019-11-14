@@ -231,7 +231,13 @@ ipython想必大家都非常熟悉交互式Python开发工具。ipython一个典
 在自动化测试中，我们也可以使用类似的方式，高效地调整测试脚本，或者定位某一个错误。例如，在下面的例子中，我们快速验证被测软件的接口：
 
 **json**
+json可以是一种家喻户晓的数据交换格式了。在自动化测试中，我们经常需要处理json格式的数据。Python中的json库，提供了序列化和反序列化json对象的方法。
 
+import json
+json.dumps(['foo', {'bar': ('baz', None, 1.0, 2)}])
+#'["foo", {"bar": ["baz", null, 1.0, 2]}]'
+json.loads('["foo", {"bar":["baz", null, 1.0, 2]}]')
+#['foo', {'bar': ['baz', None, 1.0, 2]}]
 
 **kubernetes**
 在云原生和微服务日益普及的趋势下，基于Kubernetes的测试环境变得越来常见。Python的kubernetes库，提供了管理和控制Kunernetes namespace, pod, node的接口API。
@@ -253,7 +259,181 @@ for i in ret.items:
 
 **locust**
 
+locust是Python编写的，可扩展的压力测试工具。它主要用在性能测试用，目的是验证系统(不仅仅是UI系统)能够承受的最大并发用户数量。locust通过gevent实现事件驱动，能够在单台机器上模拟海量的用户行为。
+
+locust的安装方式为：
+pip install locustio
+
+下面的例子中
+from locust import HttpLocust, TaskSet
+
+def login(l):
+    l.client.post("/login", {"username":"ellen_key", "password":"education"})
+
+def logout(l):
+    l.client.post("/logout", {"username":"ellen_key", "password":"education"})
+
+def index(l):
+    l.client.get("/")
+
+def profile(l):
+    l.client.get("/profile")
+
+class UserBehavior(TaskSet):
+    tasks = {index: 2, profile: 1}
+
+    def on_start(self):
+        login(self)
+
+    def on_stop(self):
+        logout(self)
+
+class WebsiteUser(HttpLocust):
+    task_set = UserBehavior
+    min_wait = 5000
+    max_wait = 9000
+
+执行命令为：locust --host=http://example.com
+
+然后用浏览器打开http://127.0.0.1:8089/，就可以开发并发测试了。
+
 **mock**
+mock是Python标准库中的一个模块，它用于替换程序中的属性和接口，并返回预定义的结果。mock主要用于Python单元测试。当然，对于Python实现的高级别测试用例，在被测对象还不可用的时候，可以用mock来调试测试用例。
+
+
+下面是一个mock示例。示例中，ProductionClass类的method方法被mock掉，并且返回值设置为3。这样，当调用method方法时，就不会真的去执行它，而直接范围3。
+
+from unittest.mock import MagicMock
+thing = ProductionClass()
+thing.method = MagicMock(return_value=3)
+thing.method(3, 4, 5, key='value')
+thing.method.assert_called_with(3, 4, 5, key='value')
+
+**nose2**
+nose2是Python的单元测试框架"三剑客"之一。另两个分别是unittest和pytest，后面会有介绍。我之前也写过一篇比较这三个框架的文章《三种最流行的Python测试框架，我该用哪一个？》。
+
+nose2安装命令为：
+
+pip install nose2
+
+nose2的主要目的是扩展python的标准单元测试库unittest，因此它的定位是“带插件的unittest”。nose2提供的插件，例如测试用例加载器，覆盖度报告生成器，并行测试等内置插件和第三方插件，让单元测试变得更加完善。
+
+一个简单的nose单元测试示例如下：
+
+import nose2
+ 
+def test_example ():
+    pass
+ 
+if __name__ == '__main__':
+    nose2.runmodule()
+
+执行结果：
+
+...
+---------------------
+Ran1 tests in 0.000s
+OK
+
+**os**
+
+操作系统是我们在自动化测试过程经常需要打交道的一个对象。Python标准库中的os模块，提供了调用操纵系统接功能的接口，包括但不限于工作路径切换，文件夹处理，环境变量，进程信息，文件描述符操作等。
+
+下面是几个使用os模块的简单示例：
+
+import os
+
+print(os.getcwd())
+
+print(os.listdir())
+
+os.chdir('Population_Data/New York')
+
+os.mkdir('testdir')
+
+**pytest**
+刚才介绍了，pytest是Python单元测试框架三剑客之一。事实上，pytest不仅让单元测试变得更容易，并且也能扩展到支持应用层面复杂的功能测试。甚至在nose2 Github主页上，都推荐大家使用pytest，而不是nose2。
+
+pytest的特性有：
+
+1）支持用简单的assert语句实现丰富的断言，无需复杂的self.assert*函数
+2）自动识别测试模块和测试函数
+3）兼容unittest和nose测试集
+4）支持Fixture形式的测试setup/teardown，这一点我的文章《什么是Fixture？》中有详细介绍。
+5）丰富的插件生态，已有300多个各式各样的插件，和活跃的社区
+
+pytest一个简单的示例如下：
+
+definc(x):
+    return x +1
+ 
+deftest_answer():
+    assert inc(3) ==5
+执行结果如下：
+
+$ pytest
+============================= test session starts=============================
+collected 1 items
+test_sample.py F
+================================== FAILURES===================================
+_________________________________ test_answer_________________________________
+    def test_answer():
+>       assert inc(3)== 5
+E       assert 4 == 5
+E        +  where 4 = inc(3)
+ 
+test_sample.py:5: AssertionError
+========================== 1 failed in 0.04 seconds===========================
+
+**Queue**
+
+**Robot Framework**
+Robot Framework是重要的功能自动化测试框架。它是完全基于Python编写的。Robot Framework的作者是芬兰人Pekka Laukkanen，其设计思想源于Pekka在2006年提交的，题为"Data-Driven and Keyword-Driven Test Automation Frameworks"的硕士论文。在同年，Robot Framework有了第一个版本。2008年，Robot Framework v2.0正式在Github上开源。Robot Framework最新版本是今年5月发布的v3.1.2。
+
+Robot Framework有三大特点：通用(general)，关键词驱动(keyword-driven)和模块化(modular)。基于Robot Framework编写测试用例，使用的是Robot语法。这是一种领域专用语言(DSL)。十分接近自然语言，因此适合开发基础薄弱的测试人员转型自动化。
+
+安装命令为：
+pip install robotframework
+
+一个简单的示例为：
+*** Settings ***
+Documentation     A test suite with a single test for valid login.
+Resource          resource.txt
+
+*** Test Cases ***
+Valid Login
+    Open Browser To Login Page
+    Input Username    demo
+    Input Password    mode
+    Submit Credentials
+    Welcome Page Should Be Open
+    [Teardown]    Close Browser
+
+这里测试用例中的步骤，可以基于Robot Framework标准库或第三方库来实现，也可以自己用Python或者Java语言来实现。
+
+**selenium**
+Python中的selenium库提供了一系列简洁的API来与Selenium Webdriver进行交互，实现UI自动化测试。
+
+selenium的安装命令为：pip install selenium
+
+由于python selenium库并不直接操作浏览器，而是通过Webdriver。因此还需要安装一个可用的Webdriver，并且配置。不同浏览器需要安装不同的Webdriver，一般都能在浏览器官方上下载到。
+
+下面是一个使用selenium的简单例子。例子中，调用Fixfox浏览器， 打开网址http://www.python.org，然后找到搜索框，输入pycon，回车得到搜索结果。在过程中，利用assert做了一些中间结果的判断。
+
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
+driver = webdriver.Firefox()
+driver.get("http://www.python.org")
+assert "Python" in driver.title
+elem = driver.find_element_by_name("q")
+elem.clear()
+elem.send_keys("pycon")
+elem.send_keys(Keys.RETURN)
+assert "No results found." not in driver.page_source
+driver.close()
+
+
 
 
 更多示例
